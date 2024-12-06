@@ -10,13 +10,16 @@ import {
   ClockCircleOutlined
 } from '@ant-design/icons';
 import { css } from '@emotion/css';
+import { BACKGROUND_COLOR } from '../../contstants/colors';
+import { TOKEN } from '../../contstants/tokens';
+import { getAuth, useAuth } from '../../store/auth';
 
 const indexContainerCSS = css`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: hsl(205deg 20% 94%);
+  background-color: ${BACKGROUND_COLOR};
 `;
 
 const indexInnerContainerCSS = css`
@@ -40,13 +43,17 @@ function Index() {
   const [value, setValue] = useState<string>('');
   const sessionId = useSessionId();
   const isReading = useRef<boolean>(false);
-
   const { transcript, resetTranscript } = useSpeechRecognition();
-
-
+  const auth = useAuth();
+  console.log(auth);
   useEffect(() => {
-    loadSessionId();
-  }, [])
+    if (auth?.token != null) {
+      console.log(TOKEN);
+      console.log(auth);
+      console.log(getAuth()?.token)
+      loadSessionId();
+    }
+  }, [auth])
 
   const handleSend = useCallback(async () => {
     const temp = value;

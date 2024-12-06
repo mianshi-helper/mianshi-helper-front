@@ -1,0 +1,1 @@
+export const BACKGROUND_COLOR = "hsl(205deg 20% 94%)";
