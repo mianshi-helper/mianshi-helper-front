@@ -8,7 +8,7 @@ interface Props {
 }
 
 function PrivateRoute({ children }: Props) {
-    const [isAuth] = useIsAuth();
+    const isAuth = useIsAuth();
     console.log('isAuth', isAuth);
     if (isAuth) {
         return <>{children}</>;

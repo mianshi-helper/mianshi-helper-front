@@ -2,7 +2,9 @@ import { SessionId } from "../store/session";
 import { Auth } from "../types/Auth";
 import { LoginParams } from "../types/Login";
 import {RegisterParams} from "../types/Register";
-import { createAuthInterface, createCommonInterface } from "./config";
+import { createAuthInterface, createCommonInterface, createFormInterface } from "./config";
+import { AiList } from '../types/AiListItem';
+import { User } from "../types/User";
 
 export interface Responce {
   message: string;
@@ -79,3 +81,24 @@ export const apiGetVerifyUserName = createCommonInterface<boolean, {userName: st
     responseKey: 'data'
   }
 )
+
+export const apiGetAiList = createAuthInterface<AiList>(
+  "GET",
+  "getAiList",
+  {
+    responseKey: 'aiList'
+  }
+)
+
+export const apiGetUser = createAuthInterface<User, void>(
+  "GET",
+  "getCurrentUser",
+  {
+    responseKey: 'data'
+  }
+)
+
+export const apiUploadFile = createFormInterface<{ message: string; filePath: string }, FormData>(
+    "POST",
+    "upload",
+);

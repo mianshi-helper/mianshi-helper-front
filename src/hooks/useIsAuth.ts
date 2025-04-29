@@ -1,11 +1,20 @@
 import { useMemo } from "react";
 import { useAuth } from "../store/auth";
+import { message } from "antd";
 
-export function useIsAuth(): [boolean] {
+export function useIsAuth(): boolean {
     const auth = useAuth();
-    console.log('isAuth', auth);
     const isAuth = useMemo(() => {
-        return auth?.token !== '' && Number(auth?.expirationTime) > (+Date.now() / 1000);
-    },[auth]);
-    return [isAuth];
+        if (!auth?.token) {
+            message.error("请先登录");
+            return false;
+        }
+        const isTokenValid = Number(auth?.expirationTime) > (+Date.now());
+        if (!isTokenValid) {
+            message.error("登录已过期，请重新登录");
+            return false;
+        }
+        return true;
+    }, [auth]);
+    return isAuth;
 }

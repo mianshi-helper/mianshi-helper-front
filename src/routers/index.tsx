@@ -3,6 +3,7 @@ import Interview from "../pages/interview";
 import Login from "../pages/Login";
 import PrivateRoute from "./PrivateRoute";
 import Index from "../pages/Index";
+import UserPage from "../pages/User";
 
 
 function RouterIndex() {
@@ -21,6 +22,7 @@ function RouterIndex() {
             } />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Login />} />
+            <Route path="/user" element={<UserPage />} />
             <Route path="*" element={<Navigate to="/index" />} />
         </Routes>
     );

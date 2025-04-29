@@ -9,15 +9,15 @@ import { useCallback } from "react";
 
 function Login() {
     const isLogin = useIsInLoginPage();
-    const nagivate = useNavigate();
+    const naviagte = useNavigate();
 
     const handleBackLogin = useCallback(() => {
-        nagivate("/login")
-    }, [nagivate]);
+        naviagte("/login")
+    }, [naviagte]);
 
     const handleBackRegister = useCallback(() => {
-        nagivate("/register")
-    }, [nagivate]);
+        naviagte("/register")
+    }, [naviagte]);
     
     return (
         <LoginContainer>

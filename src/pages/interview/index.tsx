@@ -1,18 +1,18 @@
-import { Button, Input } from 'antd';
+import { Button, Input, message } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import Dialogue from '../../components/Dialogue';
 import { loadSessionId, useSessionId } from '../../store/session';
 import { setDialouge } from '../../store/dialogue';
-import { apiPostAnswer } from '../../api/request';
+import { apiPostAnswer, apiUploadFile } from '../../api/request';
 import {
   AudioOutlined,
-  ClockCircleOutlined
+  ClockCircleOutlined,
+  FileAddOutlined
 } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { BACKGROUND_COLOR } from '../../contstants/colors';
-import { TOKEN } from '../../contstants/tokens';
-import { getAuth, useAuth } from '../../store/auth';
+import { useAuth } from '../../store/auth';
 
 const indexContainerCSS = css`
   display: flex;
@@ -45,12 +45,8 @@ function Interview() {
   const isReading = useRef<boolean>(false);
   const { transcript, resetTranscript } = useSpeechRecognition();
   const auth = useAuth();
-  console.log(auth);
   useEffect(() => {
     if (auth?.token != null) {
-      console.log(TOKEN);
-      console.log(auth);
-      console.log(getAuth()?.token)
       loadSessionId();
     }
   }, [auth])
@@ -91,6 +87,35 @@ function Interview() {
     }
   }, [resetTranscript, sessionId?.sessionId, transcript])
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleUpFile(file);
+    e.target.value = ''; // 重置以允许重复选择同一文件
+  };
+
+  const handleUpFile = useCallback(async (file: File) => {
+    const allowedTypes = ['text/plain', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      message.error('仅支持上传 .txt 和 .pdf 文件');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await apiUploadFile(formData);
+      message.success(res.message);
+    } catch (error) {
+      message.error('文件上传失败');
+    }
+  }, []);
+
   return (
     <div className={indexContainerCSS}>
       <div className={indexInnerContainerCSS}>
@@ -109,6 +134,19 @@ function Interview() {
                 <AudioOutlined />
             }
           />
+          {/* 上传文件 */}
+          <>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept=".txt,.pdf"
+              style={{ display: 'none' }}
+            />
+            <Button icon={<FileAddOutlined />} onClick={triggerFileInput}>
+              上传简历
+            </Button>
+          </>
         </div>
       </div>
     </div>
