@@ -2,7 +2,7 @@ import { SessionId } from "../store/session";
 import { Auth } from "../types/Auth";
 import { LoginParams } from "../types/Login";
 import {RegisterParams} from "../types/Register";
-import { createAuthInterface, createCommonInterface, createFormInterface } from "./config";
+import { createAuthInterface, createCommonInterface, createFormInterface, getAuthorization } from "./config";
 import { AiList } from '../types/AiListItem';
 import { User } from "../types/User";
 
@@ -102,3 +102,23 @@ export const apiUploadFile = createFormInterface<{ message: string; filePath: st
     "POST",
     "upload",
 );
+
+export async function apiUploadFile2(file: File): Promise<{ message: string; filePath: string }> {
+    const url = import.meta.env.VITE_PROTOCOL + "://" + import.meta.env.VITE_HOST + "/upload";
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            ...getAuthorization(),
+        },
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error("File upload failed");
+    }
+
+    return response.json();
+}

@@ -13,7 +13,7 @@ function UserPage() {
     }, [navigate]);
 
     const user = useUser();
-
+    console.log(user);
     useEffect(() => {
         loadUser();
     }, [])

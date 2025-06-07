@@ -4,7 +4,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import Dialogue from '../../components/Dialogue';
 import { loadSessionId, useSessionId } from '../../store/session';
 import { setDialouge } from '../../store/dialogue';
-import { apiPostAnswer, apiUploadFile } from '../../api/request';
+import { apiPostAnswer, apiUploadFile2 } from '../../api/request';
 import {
   AudioOutlined,
   ClockCircleOutlined,
@@ -72,7 +72,7 @@ function Interview() {
   const handleSpeek = useCallback(async () => {
     if (!isReading.current) {
       isReading.current = true;
-      SpeechRecognition.startListening({ continuous: true });
+      SpeechRecognition.startListening({ continuous: true, language: 'zh-CN' });
     }
     else {
       isReading.current = false;
@@ -109,8 +109,9 @@ function Interview() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const res = await apiUploadFile(formData);
+      const res = await apiUploadFile2(file);
       message.success(res.message);
+      location.reload();
     } catch (error) {
       message.error('文件上传失败');
     }

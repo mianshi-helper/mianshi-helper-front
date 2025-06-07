@@ -20,9 +20,13 @@ function RouterIndex() {
                     <Interview />
                 </PrivateRoute>
             } />
+            <Route path="/user" element={
+                <PrivateRoute>
+                    <UserPage />
+                </PrivateRoute>
+            } />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Login />} />
-            <Route path="/user" element={<UserPage />} />
             <Route path="*" element={<Navigate to="/index" />} />
         </Routes>
     );

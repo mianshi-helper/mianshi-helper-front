@@ -16,12 +16,12 @@ const option = {
 const formOptions = {
     ...baseOptions,
     headers: {
-        "Content-Type": "multipart/form-data",
         ...getAuthorization(),
-    }
+        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryFIc14z39Lb6Leu6y'
+    },
 }
 
-function getAuthorization() {
+export function getAuthorization() {
     return {
         Authorization: `Bearer ${getAuth()?.token}`,
     };
